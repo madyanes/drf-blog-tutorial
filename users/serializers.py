@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,3 +23,11 @@ class UserSerializer(serializers.ModelSerializer):
         and the list of `fields` that should be included in the serialized output. 
         In this case, the `username`, `email`, and `password` fields will be included in the serialized output.
         '''
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        token['email'] = user.email
+        return token
